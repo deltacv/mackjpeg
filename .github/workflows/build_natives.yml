@@ -22,7 +22,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: native-linux-amd64
-          path: ${{github.workspace}}/libjpeg-turbo/build/*.so
+          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg.so
   build-linux-arm64:
     runs-on: ubuntu-latest
     steps:
@@ -51,19 +51,26 @@ jobs:
 
       - name: Configure CMake for cross-compilation
         run: |
+          cd ${{github.workspace}}/libjpeg-turbo
+          mkdir build
+          cd build
           cmake \
+            -G"Unix Makefiles"
+            -DWITH_JAVA=1
             -DCMAKE_SYSTEM_NAME=Linux \
             -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
             -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
-            -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ .
+            -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ../
 
       - name: Build
-        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          make -j3
 
       - uses: actions/upload-artifact@v4
         with:
           name: native-linux-arm64
-          path: ${{github.workspace}}/*.so
+          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg.so
   build-windows:
     runs-on: windows-latest
     steps:
@@ -75,13 +82,20 @@ jobs:
           distribution: adopt
           java-version: "11"
       - name: Configure CMake
-        run: cmake -T ClangCL .
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo
+          mkdir build
+          cd build
+          cmake -T G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DWITH_JAVA=1 ../
+
       - name: Build
-        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          nmake -j3
       - uses: actions/upload-artifact@v4
         with:
           name: native-windows-amd64
-          path: ${{github.workspace}}\${{env.BUILD_TYPE}}\*.dll
+          path: ${{github.workspace}}\libjpeg-turbo/build\*.dll
   build-mac:
     runs-on: macos-13
     steps:
@@ -93,13 +107,19 @@ jobs:
           distribution: adopt
           java-version: "11"
       - name: Configure CMake
-        run: cmake .
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo
+          mkdir build
+          cd build
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
       - name: Build
-        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          make -j3
       - uses: actions/upload-artifact@v4
         with:
           name: native-mac-amd64
-          path: ${{github.workspace}}/*.dylib
+          path: ${{github.workspace}}/libjpeg-turbo/build/*.dylib
   build-mac-arm:
     runs-on: macos-latest
     steps:
@@ -111,13 +131,19 @@ jobs:
           distribution: adopt
           java-version: "11"
       - name: Configure CMake
-        run: cmake .
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo
+          mkdir build
+          cd build
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
       - name: Build
-        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          make -j3
       - uses: actions/upload-artifact@v4
         with:
           name: native-mac-arm64
-          path: ${{github.workspace}}/*.dylib
+          path: ${{github.workspace}}/libjpeg-turbo/build/*.dylib
 
   upload-artifacts:
     needs:
