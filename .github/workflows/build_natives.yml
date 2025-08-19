@@ -22,7 +22,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 -DCMAKE_SHARED_LIBRARY_SUFFIX="-amd64.so" ../
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
@@ -30,7 +30,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: native-linux-amd64
-          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg.so
+          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg-amd64.so
   build-linux-arm64:
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_SHARED_LIBRARY_SUFFIX="-arm64.so" ../
 
       - name: Build
         run: |
@@ -64,7 +64,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: native-linux-arm64
-          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg.so
+          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg-arm64.so
   build-windows:
     runs-on: windows-latest
     steps:
@@ -104,7 +104,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 -DCMAKE_SHARED_LIBRARY_SUFFIX="-amd64.dylib" ../
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
@@ -112,7 +112,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: native-mac-amd64
-          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg.dylib
+          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg-amd64.dylib
   build-mac-arm:
     runs-on: macos-latest
     steps:
@@ -128,7 +128,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 -DCMAKE_SHARED_LIBRARY_SUFFIX="-arm64.so" ./
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
@@ -136,7 +136,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: native-mac-arm64
-          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg.dylib
+          path: ${{github.workspace}}/libjpeg-turbo/build/libturbojpeg-arm64.dylib
 
   upload-artifacts:
     needs:
@@ -171,7 +171,7 @@ jobs:
       - name: Zip Files
         run: |
           cd ${{github.workspace}}/artifacts
-          zip -r apriltagdesktop-natives.zip .
+          zip -r turbojpeg-natives.zip .
 
       - uses: marvinpinto/action-automatic-releases@latest
         with:
