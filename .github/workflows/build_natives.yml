@@ -26,7 +26,7 @@ jobs:
           cmake -G"Unix Makefiles" ../
       - name: Build
         run: make -j3
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: native-linux-amd64
           path: ${{github.workspace}}/libjpeg-turbo/build/*.so
@@ -59,7 +59,7 @@ jobs:
       - name: Build
         run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: native-linux-arm64
           path: ${{github.workspace}}/*.so
@@ -77,7 +77,7 @@ jobs:
         run: cmake -T ClangCL .
       - name: Build
         run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: native-windows-amd64
           path: ${{github.workspace}}\${{env.BUILD_TYPE}}\*.dll
@@ -95,7 +95,7 @@ jobs:
         run: cmake .
       - name: Build
         run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: native-mac-amd64
           path: ${{github.workspace}}/*.dylib
@@ -113,7 +113,7 @@ jobs:
         run: cmake .
       - name: Build
         run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: native-mac-arm64
           path: ${{github.workspace}}/*.dylib
@@ -126,19 +126,19 @@ jobs:
       - build-mac-arm
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native-windows-amd64
           path: ${{github.workspace}}/artifacts
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native-linux-amd64
           path: ${{github.workspace}}/artifacts
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native-linux-arm64
           path: ${{github.workspace}}/artifacts
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: native-mac-amd64
           path: ${{github.workspace}}/artifacts
