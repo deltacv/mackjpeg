@@ -1,0 +1,77 @@
+name: Build and test Java project
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build and test
+        run: ./gradlew clean build
+
+  build-linux-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build and test (ARM64)
+        run: ./gradlew clean build
+        env:
+          QEMU_CPU: cortex-a72  # emulation hint for arm64 builds
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Build and test
+        run: ./gradlew.bat clean build
+
+  build-mac-amd64:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build and test
+        run: ./gradlew clean build
+
+  build-mac-arm64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+      - name: Run chmod to make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build and test
+        run: ./gradlew clean build
