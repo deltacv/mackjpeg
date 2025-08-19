@@ -54,13 +54,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake \
-            -G"Unix Makefiles"
-            -DWITH_JAVA=1
-            -DCMAKE_SYSTEM_NAME=Linux \
-            -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-            -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
-            -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ../
 
       - name: Build
         run: |
@@ -86,7 +80,7 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -T G"NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DWITH_JAVA=1 ../
+          cmake -T G"Visual Studio 10 Win64" -DCMAKE_BUILD_TYPE=Release -DWITH_JAVA=1 ../
 
       - name: Build
         run: |
@@ -148,6 +142,7 @@ jobs:
   upload-artifacts:
     needs:
       - build-linux
+      - build-linux-arm64
       - build-windows
       - build-mac
       - build-mac-arm
