@@ -192,7 +192,7 @@ jobs:
       - name: Zip Files
         run: |
           cd ${{github.workspace}}/artifacts
-          zip -r apriltagdesktop-natives.zip .
+          zip -r turbojpeg-jni-natives.zip .
 
       - uses: marvinpinto/action-automatic-releases@latest
         with:
