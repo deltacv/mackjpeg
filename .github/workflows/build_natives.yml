@@ -22,11 +22,15 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1 -DCMAKE_SHARED_LIBRARY_SUFFIX="-amd64.so" ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
           make -j3
+      - name: Rename library
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          mv libturbojpeg.so libturbojpeg-amd64.so
       - uses: actions/upload-artifact@v4
         with:
           name: native-linux-amd64
@@ -54,13 +58,18 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ -DCMAKE_SHARED_LIBRARY_SUFFIX="-arm64.so" ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ ../
 
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
           make -j3
 
+      - name: Rename library
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          mv libturbojpeg.so libturbojpeg-arm64.so
+      
       - uses: actions/upload-artifact@v4
         with:
           name: native-linux-arm64
@@ -104,11 +113,17 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1 -DCMAKE_SHARED_LIBRARY_SUFFIX="-amd64.dylib" ../
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
           make -j3
+
+      - name: Rename library
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          mv libturbojpeg.dylib libturbojpeg-amd64.dylib
+          
       - uses: actions/upload-artifact@v4
         with:
           name: native-mac-amd64
@@ -128,11 +143,17 @@ jobs:
           cd ${{github.workspace}}/libjpeg-turbo
           mkdir build
           cd build
-          cmake -G"Unix Makefiles" -DWITH_JAVA=1 -DCMAKE_SHARED_LIBRARY_SUFFIX="-arm64.so" ./
+          cmake -G"Unix Makefiles" -DWITH_JAVA=1 ../
       - name: Build
         run: |
           cd ${{github.workspace}}/libjpeg-turbo/build
           make -j3
+      
+      - name: Rename library
+        run: |
+          cd ${{github.workspace}}/libjpeg-turbo/build
+          mv libturbojpeg.dylib libturbojpeg-arm64.dylib
+          
       - uses: actions/upload-artifact@v4
         with:
           name: native-mac-arm64
@@ -171,7 +192,7 @@ jobs:
       - name: Zip Files
         run: |
           cd ${{github.workspace}}/artifacts
-          zip -r turbojpeg-natives.zip .
+          zip -r apriltagdesktop-natives.zip .
 
       - uses: marvinpinto/action-automatic-releases@latest
         with:
