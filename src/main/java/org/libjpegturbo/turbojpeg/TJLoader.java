@@ -19,29 +19,7 @@ public class TJLoader {
         String os = System.getProperty("os.name").toLowerCase(Locale.getDefault());
         String arch = System.getProperty("os.arch").toLowerCase(Locale.getDefault());
 
-        String libPath = null;
-
-        if (os.contains("win")) {
-            if (arch.contains("64")) {
-                libPath = "/tj/windows_64/turbojpeg.dll";
-            } else {
-                libPath = "/tj/windows_32/turbojpeg.dll";
-            }
-        } else if (os.contains("linux")) {
-            if (arch.contains("64")) {
-                libPath = "/tj/linux_64/libturbojpeg.so";
-            } else {
-                libPath = "/tj/linux_32/libturbojpeg.so";
-            }
-        } else if (os.contains("mac") || os.contains("darwin")) {
-            if (arch.contains("64")) {
-                libPath = "/tj/osx_64/libturbojpeg.dylib";
-            } else if (arch.contains("ppc")) {
-                libPath = "/tj/osx_ppc/libturbojpeg.dylib";
-            } else {
-                libPath = "/tj/osx_32/libturbojpeg.dylib";
-            }
-        }
+        String libPath = getLibPath(arch, os);
 
         if (libPath == null) {
             isLoaded = false;
@@ -50,6 +28,24 @@ public class TJLoader {
 
         loadFromResource(libPath);
         isLoaded = true;
+    }
+
+    private static String getLibPath(String arch, String os) {
+        boolean isArm = arch.contains("arm") || arch.contains("aarch64");
+
+        String libPath = "/tj/";
+
+        if(os.contains("win")) {
+            libPath += "turbojpeg.dll";
+        } else if (os.contains("mac")) {
+            libPath += isArm ? "libturbojpeg-arm64.dylib" : "libturbojpeg-amd64.dylib";
+        } else if (os.contains("nix") || os.contains("nux")) {
+            libPath += isArm ? "libturbojpeg-arm64.so" : "libturbojpeg-amd64.so";
+        } else {
+            // Unsupported OS
+            libPath = null;
+        }
+        return libPath;
     }
 
     private static void loadFromResource(String resource) {

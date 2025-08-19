@@ -5,6 +5,7 @@ import org.deltacv.mackjpeg.PixelFormat;
 import org.deltacv.mackjpeg.exception.JPEGException;
 import org.libjpegturbo.turbojpeg.TJ;
 import org.libjpegturbo.turbojpeg.TJCompressor;
+import org.libjpegturbo.turbojpeg.TJException;
 
 public class TJPEGCompressor implements JPEGCompressor {
 
@@ -13,7 +14,7 @@ public class TJPEGCompressor implements JPEGCompressor {
     @Override
     public void setImage(byte[] image, int width, int height, PixelFormat pixelFormat) throws JPEGException {
         try {
-            tj = new TJCompressor(image, width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
+            tj = new TJCompressor(image, 0, 0, width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to create TJPEGCompressor", e);
         }
@@ -24,7 +25,7 @@ public class TJPEGCompressor implements JPEGCompressor {
         assertNonNull();
 
         try {
-            tj.setJPEGQuality(quality);
+            tj.set(TJ.PARAM_QUALITY, quality);
         } catch (Exception e) {
             throw new JPEGException("Failed to set quality", e);
         }
@@ -35,7 +36,7 @@ public class TJPEGCompressor implements JPEGCompressor {
         assertNonNull();
 
         try {
-            tj.compress(out, TJ.FLAG_FASTDCT);
+            tj.compress(out);
         } catch (Exception e) {
             throw new JPEGException("Failed to compress image", e);
         }
@@ -46,7 +47,7 @@ public class TJPEGCompressor implements JPEGCompressor {
         assertNonNull();
 
         try {
-            return tj.compress(TJ.FLAG_FASTDCT);
+            return tj.compress();
         } catch (Exception e) {
             throw new JPEGException("Failed to compress image", e);
         }
@@ -55,6 +56,14 @@ public class TJPEGCompressor implements JPEGCompressor {
     private void assertNonNull() throws JPEGException {
         if (tj == null) {
             throw new JPEGException("TJPEGCompressor is not initialized, call setImage() first.");
+        }
+    }
+
+    @Override
+    public void close() throws TJException {
+        if(tj != null) {
+            tj.close();
+            tj = null;
         }
     }
 }

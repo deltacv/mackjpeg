@@ -3,7 +3,7 @@ package org.deltacv.mackjpeg.turbojpeg;
 import org.deltacv.mackjpeg.PixelFormat;
 import org.libjpegturbo.turbojpeg.TJ;
 
-public final class TJPixelFormatMapper {
+final class TJPixelFormatMapper {
     private TJPixelFormatMapper() {
         // Prevent instantiation
     }

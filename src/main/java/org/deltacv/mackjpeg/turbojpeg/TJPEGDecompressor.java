@@ -20,7 +20,7 @@ public class TJPEGDecompressor implements JPEGDecompressor {
     @Override
     public void setJPEG(byte[] jpegData, int jpegSize) throws JPEGException {
         try {
-            tj.setJPEGImage(jpegData, jpegSize);
+            tj.setSourceImage(jpegData, jpegSize);
         } catch (Exception e) {
             throw new JPEGException("Failed to set JPEG Image", e);
         }
@@ -29,18 +29,36 @@ public class TJPEGDecompressor implements JPEGDecompressor {
     @Override
     public void decompress(byte[] out, int width, int height, PixelFormat pixelFormat) throws JPEGException {
         try {
-            tj.decompress(out, width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat), TJ.FLAG_FASTDCT);
+            tj.decompress8(out, width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to decompress JPEG Image", e);
         }
     }
 
     @Override
-    public byte[] decompress(int width, int height, PixelFormat pixelFormat)  throws JPEGException {
+    public byte[] decompress(PixelFormat pixelFormat)  throws JPEGException {
         try {
-            return tj.decompress(width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat), TJ.FLAG_FASTDCT);
+            return tj.decompress8(0, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to decompress JPEG Image", e);
+        }
+    }
+
+    @Override
+    public int getDecodedWidth() {
+        return tj.getWidth();
+    }
+
+    @Override
+    public int getDecodedHeight() {
+        return tj.getHeight();
+    }
+
+    @Override
+    public void close() {
+        if (tj != null) {
+            tj.close();
+            tj = null;
         }
     }
 }

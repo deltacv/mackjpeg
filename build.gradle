@@ -3,19 +3,25 @@ plugins {
 }
 
 group = 'org.deltacv'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
+
+sourceSets {
+    main {
+        java {
+            srcDirs += '/libjpeg-turbo/java'
+        }
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation platform('org.lwjgl:lwjgl-bom:3.3.4')
-    implementation "org.lwjgl:lwjgl-stb"
-
-    ['natives-linux', 'natives-windows', 'natives-macos', 'natives-macos-arm64'].each {
-        implementation "org.lwjgl:lwjgl-stb::$it"
-    }
+    // junit
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
 }
 
 test {

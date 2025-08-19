@@ -6,7 +6,6 @@ import org.deltacv.mackjpeg.JPEGDecompressor;
 import org.libjpegturbo.turbojpeg.TJLoader;
 
 public final class TurboJPEGBackend implements JPEGBackend {
-
     public static final TurboJPEGBackend INSTANCE = new TurboJPEGBackend();
 
     static {
