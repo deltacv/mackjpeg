@@ -25,7 +25,7 @@ jobs:
           cmake -G"Unix Makefiles" ../
       - name: Build
         run: |
-          cd ${{github.workspace}}/libjpeg-turbo
+          cd ${{github.workspace}}/libjpeg-turbo/build
           make -j3
       - uses: actions/upload-artifact@v4
         with:
