@@ -1,0 +1,162 @@
+name: CMake
+on:
+  push:
+    branches:
+      - "**"
+
+env:
+  BUILD_TYPE: Release
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: "8"
+      - name: CD into libjpeg-turbo
+        run: cd ${{github.workspace}}/libjpeg-turbo
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake -G"Unix Makefiles" ../
+      - name: Build
+        run: make -j3
+      - uses: actions/upload-artifact@v3
+        with:
+          name: native-linux-amd64
+          path: ${{github.workspace}}/libjpeg-turbo/build/*.so
+  build-linux-arm64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: "8"
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake gcc g++ gfortran
+
+      - name: Install cross-compilation tools for ARM64
+        run: sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
+
+      - name: Configure CMake for cross-compilation
+        run: |
+          cmake \
+            -DCMAKE_SYSTEM_NAME=Linux \
+            -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
+            -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
+            -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ .
+
+      - name: Build
+        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: native-linux-arm64
+          path: ${{github.workspace}}/*.so
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: "11"
+      - name: Configure CMake
+        run: cmake -T ClangCL .
+      - name: Build
+        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: native-windows-amd64
+          path: ${{github.workspace}}\${{env.BUILD_TYPE}}\*.dll
+  build-mac:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: "11"
+      - name: Configure CMake
+        run: cmake .
+      - name: Build
+        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: native-mac-amd64
+          path: ${{github.workspace}}/*.dylib
+  build-mac-arm:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v3
+        with:
+          distribution: adopt
+          java-version: "11"
+      - name: Configure CMake
+        run: cmake .
+      - name: Build
+        run: cmake --build ${{github.workspace}} --config ${{env.BUILD_TYPE}}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: native-mac-arm64
+          path: ${{github.workspace}}/*.dylib
+
+  upload-artifacts:
+    needs:
+      - build-linux
+      - build-windows
+      - build-mac
+      - build-mac-arm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-windows-amd64
+          path: ${{github.workspace}}/artifacts
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-linux-amd64
+          path: ${{github.workspace}}/artifacts
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-linux-arm64
+          path: ${{github.workspace}}/artifacts
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-mac-amd64
+          path: ${{github.workspace}}/artifacts
+      - uses: actions/download-artifact@v3
+        with:
+          name: native-mac-arm64
+          path: ${{github.workspace}}/artifacts
+
+      - name: Zip Files
+        run: |
+          cd ${{github.workspace}}/artifacts
+          zip -r apriltagdesktop-natives.zip .
+
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: natives-${{github.ref}}
+          prerelease: true
+          title: Natives from ${{github.ref}}
+          files: |
+            ${{github.workspace}}/artifacts/*
