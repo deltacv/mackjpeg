@@ -88,7 +88,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: native-windows-amd64
-          path: ${{github.workspace}}\libjpeg-turbo/build\*.dll
+          path: ${{github.workspace}}\libjpeg-turbo\build\Release\*.dll
   build-mac:
     runs-on: macos-13
     steps:
