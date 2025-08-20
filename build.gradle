@@ -27,3 +27,5 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+apply from: 'test-logging.gradle'
