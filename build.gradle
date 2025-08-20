@@ -8,7 +8,7 @@ version = '1.0.0'
 sourceSets {
     main {
         java {
-            srcDirs += '/libjpeg-turbo/java'
+            srcDirs += "${project.rootDir}/libjpeg-turbo/java"
         }
     }
 }

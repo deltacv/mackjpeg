@@ -5,6 +5,7 @@ import org.deltacv.mackjpeg.PixelFormat;
 import org.deltacv.mackjpeg.exception.JPEGException;
 import org.libjpegturbo.turbojpeg.TJ;
 import org.libjpegturbo.turbojpeg.TJDecompressor;
+import org.libjpegturbo.turbojpeg.TJException;
 
 public class TJPEGDecompressor implements JPEGDecompressor {
     private TJDecompressor tj;
@@ -57,7 +58,10 @@ public class TJPEGDecompressor implements JPEGDecompressor {
     @Override
     public void close() {
         if (tj != null) {
-            tj.close();
+            try {
+                tj.close();
+            } catch (TJException ignored) {}
+
             tj = null;
         }
     }
