@@ -23,7 +23,7 @@ jobs:
         run: ./gradlew clean build
 
   build-linux-arm64:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - uses: actions/checkout@v3
         with:
@@ -35,10 +35,8 @@ jobs:
           distribution: 'adopt'
       - name: Run chmod to make gradlew executable
         run: chmod +x ./gradlew
-      - name: Build and test (ARM64)
+      - name: Build and test
         run: ./gradlew clean build
-        env:
-          QEMU_CPU: cortex-a72  # emulation hint for arm64 builds
 
   build-windows:
     runs-on: windows-latest
