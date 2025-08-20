@@ -1,5 +1,7 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'signing'
+    id "com.vanniktech.maven.publish" version "0.30.0"
 }
 
 group = 'org.deltacv'
