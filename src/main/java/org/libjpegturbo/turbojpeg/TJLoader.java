@@ -1,3 +1,26 @@
+/*
+ * Copyright (c) 2025 Sebastian Erives
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package org.libjpegturbo.turbojpeg;
 
 import java.io.File;
@@ -7,13 +30,25 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 
-public class TJLoader {
+/**
+ * Loader for the TurboJPEG native library.
+ * Library users shouln't need to call this directly,
+ */
+public final class TJLoader {
     private static boolean isLoaded = false;
 
     public static boolean isLoaded() {
         return isLoaded;
     }
 
+    /**
+     * Loads the TurboJPEG native library.
+     * If the library is not supported on the current OS/Arch,
+     * it will throw a RuntimeException.
+     * <p>
+     * This method should be called before using any TurboJPEG functionality.
+     * It automatically detects the OS and architecture to load the correct library.
+     */
     public static void load() {
         // get os and arch
         String os = System.getProperty("os.name").toLowerCase(Locale.getDefault());
@@ -23,7 +58,7 @@ public class TJLoader {
 
         if (libPath == null) {
             isLoaded = false;
-            throw new RuntimeException("Unsupported OS/Arch: " + os + " " + arch);
+            throw new UnsupportedOperationException("Unsupported OS/Arch: " + os + " " + arch);
         }
 
         loadFromResource(libPath);
