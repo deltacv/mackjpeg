@@ -57,7 +57,7 @@ public class TJPEGDecompressor implements JPEGDecompressor {
     @Override
     public void decompress(byte[] out, int width, int height, PixelFormat pixelFormat) throws JPEGException {
         try {
-            tj.decompress8(out, width, 0, height, TJEnumMapper.mapToTJPixelFormat(pixelFormat));
+            tj.decompress8(out, width, height, 0, TJEnumMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to decompress JPEG Image", e);
         }
