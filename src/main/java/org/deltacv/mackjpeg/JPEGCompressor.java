@@ -50,6 +50,14 @@ public interface JPEGCompressor extends AutoCloseable {
      */
     void setQuality(int quality) throws JPEGException;
 
+
+    /**
+     * Gets the size of the compressed JPEG data.
+     * @return The size of the compressed JPEG data in bytes.
+     * @throws JPEGException If an error occurs while getting the compressed size.
+     */
+    int getCompressedSize() throws JPEGException;
+
     /**
      * Compresses the image and writes the output to the specified byte array.
      *

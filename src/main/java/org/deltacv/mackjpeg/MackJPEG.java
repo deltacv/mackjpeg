@@ -42,7 +42,7 @@ public final class MackJPEG {
      * If TurboJPEG is not supported, it returns null.
      * @return JPEGBackend instance if supported, otherwise null.
      */
-    public JPEGBackend getSupportedBackend() {
+    public static JPEGBackend getSupportedBackend() {
         if(TurboJPEGBackend.INSTANCE.isSupported()) {
             return TurboJPEGBackend.INSTANCE;
         } else {

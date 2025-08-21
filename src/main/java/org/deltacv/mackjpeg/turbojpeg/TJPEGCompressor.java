@@ -49,12 +49,13 @@ public class TJPEGCompressor implements JPEGCompressor {
     @Override
     public void setQuality(int quality) throws JPEGException {
         assertNonNull();
+        tj.set(TJ.PARAM_QUALITY, quality);
+    }
 
-        try {
-            tj.set(TJ.PARAM_QUALITY, quality);
-        } catch (Exception e) {
-            throw new JPEGException("Failed to set quality", e);
-        }
+    @Override
+    public int getCompressedSize() throws JPEGException {
+        assertNonNull();
+        return tj.getCompressedSize();
     }
 
     @Override
