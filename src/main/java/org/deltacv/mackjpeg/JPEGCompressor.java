@@ -50,6 +50,13 @@ public interface JPEGCompressor extends AutoCloseable {
      */
     void setQuality(int quality) throws JPEGException;
 
+    /**
+     * Sets the subsampling mode for JPEG compression.
+     *
+     * @param sampling The subsampling mode (e.g., 4:4:4, 4:2:2, 4:2:0).
+     * @throws JPEGException If an error occurs while setting the subsampling mode.
+     */
+    void setSubSampling(Sampling sampling) throws JPEGException;
 
     /**
      * Gets the size of the compressed JPEG data.

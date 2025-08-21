@@ -26,7 +26,6 @@ package org.deltacv.mackjpeg.turbojpeg;
 import org.deltacv.mackjpeg.JPEGDecompressor;
 import org.deltacv.mackjpeg.PixelFormat;
 import org.deltacv.mackjpeg.exception.JPEGException;
-import org.libjpegturbo.turbojpeg.TJ;
 import org.libjpegturbo.turbojpeg.TJDecompressor;
 import org.libjpegturbo.turbojpeg.TJException;
 
@@ -58,7 +57,7 @@ public class TJPEGDecompressor implements JPEGDecompressor {
     @Override
     public void decompress(byte[] out, int width, int height, PixelFormat pixelFormat) throws JPEGException {
         try {
-            tj.decompress8(out, width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
+            tj.decompress8(out, width, 0, height, TJEnumMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to decompress JPEG Image", e);
         }
@@ -67,7 +66,7 @@ public class TJPEGDecompressor implements JPEGDecompressor {
     @Override
     public byte[] decompress(PixelFormat pixelFormat)  throws JPEGException {
         try {
-            return tj.decompress8(0, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
+            return tj.decompress8(0, TJEnumMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to decompress JPEG Image", e);
         }

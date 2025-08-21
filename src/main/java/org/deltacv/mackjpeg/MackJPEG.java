@@ -24,6 +24,7 @@
 package org.deltacv.mackjpeg;
 
 import org.deltacv.mackjpeg.turbojpeg.TurboJPEGBackend;
+import org.jetbrains.annotations.Nullable;
 import org.libjpegturbo.turbojpeg.TJLoader;
 
 /**
@@ -42,6 +43,7 @@ public final class MackJPEG {
      * If TurboJPEG is not supported, it returns null.
      * @return JPEGBackend instance if supported, otherwise null.
      */
+    @Nullable
     public static JPEGBackend getSupportedBackend() {
         if(TurboJPEGBackend.INSTANCE.isSupported()) {
             return TurboJPEGBackend.INSTANCE;

@@ -24,13 +24,14 @@
 package org.deltacv.mackjpeg.turbojpeg;
 
 import org.deltacv.mackjpeg.PixelFormat;
+import org.deltacv.mackjpeg.Sampling;
 import org.libjpegturbo.turbojpeg.TJ;
 
 /**
  * Utility class to map PixelFormat enums to TurboJPEG pixel format constants.
  */
-final class TJPixelFormatMapper {
-    private TJPixelFormatMapper() {
+final class TJEnumMapper {
+    private TJEnumMapper() {
         // Prevent instantiation
     }
 
@@ -45,5 +46,26 @@ final class TJPixelFormatMapper {
         }
 
         throw new IllegalArgumentException("Unsupported PixelFormat: " + pixelFormat);
+    }
+
+    public static int mapToTJSamp(Sampling samp) {
+        switch (samp) {
+            case SAMP_420:
+                return TJ.SAMP_420;
+            case SAMP_411:
+                return TJ.SAMP_411;
+            case SAMP_422:
+                return TJ.SAMP_422;
+            case SAMP_440:
+                return TJ.SAMP_440;
+            case SAMP_441:
+                return TJ.SAMP_441;
+            case SAMP_444:
+                return TJ.SAMP_444;
+            case SAMP_GRAY:
+                return TJ.SAMP_GRAY;
+        }
+
+        throw new IllegalArgumentException("Unsupported Sampling: " + samp);
     }
 }

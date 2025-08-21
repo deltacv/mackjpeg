@@ -25,6 +25,7 @@ package org.deltacv.mackjpeg.turbojpeg;
 
 import org.deltacv.mackjpeg.JPEGCompressor;
 import org.deltacv.mackjpeg.PixelFormat;
+import org.deltacv.mackjpeg.Sampling;
 import org.deltacv.mackjpeg.exception.JPEGException;
 import org.libjpegturbo.turbojpeg.TJ;
 import org.libjpegturbo.turbojpeg.TJCompressor;
@@ -37,10 +38,13 @@ public class TJPEGCompressor implements JPEGCompressor {
 
     private TJCompressor tj;
 
+    private Sampling subsamp = Sampling.SAMP_420;
+    private int quality = 50;
+
     @Override
     public void setImage(byte[] image, int width, int height, PixelFormat pixelFormat) throws JPEGException {
         try {
-            tj = new TJCompressor(image, 0, 0, width, 0, height, TJPixelFormatMapper.mapToTJPixelFormat(pixelFormat));
+            tj = new TJCompressor(image, 0, 0, width, 0, height, TJEnumMapper.mapToTJPixelFormat(pixelFormat));
         } catch (Exception e) {
             throw new JPEGException("Failed to create TJPEGCompressor", e);
         }
@@ -49,7 +53,13 @@ public class TJPEGCompressor implements JPEGCompressor {
     @Override
     public void setQuality(int quality) throws JPEGException {
         assertNonNull();
-        tj.set(TJ.PARAM_QUALITY, quality);
+        this.quality = quality;
+    }
+
+    @Override
+    public void setSubSampling(Sampling sampling) throws JPEGException {
+        assertNonNull();
+        this.subsamp = sampling;
     }
 
     @Override
@@ -61,6 +71,7 @@ public class TJPEGCompressor implements JPEGCompressor {
     @Override
     public void compress(byte[] out) throws JPEGException {
         assertNonNull();
+        applyParameters();
 
         try {
             tj.compress(out);
@@ -72,12 +83,19 @@ public class TJPEGCompressor implements JPEGCompressor {
     @Override
     public byte[] compress() throws JPEGException {
         assertNonNull();
+        applyParameters();
 
         try {
             return tj.compress();
         } catch (Exception e) {
             throw new JPEGException("Failed to compress image", e);
         }
+    }
+
+    private void applyParameters() {
+        // Apply parameters
+        tj.set(TJ.PARAM_SUBSAMP, TJEnumMapper.mapToTJSamp(subsamp));
+        tj.set(TJ.PARAM_QUALITY, quality);
     }
 
     private void assertNonNull() throws JPEGException {
