@@ -24,6 +24,7 @@
 package org.libjpegturbo.turbojpeg;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -86,7 +87,7 @@ public final class TJLoader {
     private static void loadFromResource(String resource) {
         try (InputStream res = TJLoader.class.getResourceAsStream(resource)) {
             if (res == null) {
-                throw new RuntimeException("Native lib not found: " + resource);
+                throw new FileNotFoundException("Native lib not found: " + resource);
             }
             // Create temp file
             File tempFile = File.createTempFile("libturbojpeg", getFileExtension(resource));

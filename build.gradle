@@ -18,6 +18,11 @@ sourceSets {
         java {
             srcDirs += "${project.rootDir}/libjpeg-turbo/java"
         }
+
+        resources {
+            // include native libs in the output jar
+            srcDirs "lib/"
+        }
     }
 }
 
