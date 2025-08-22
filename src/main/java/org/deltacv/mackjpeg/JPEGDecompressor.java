@@ -46,7 +46,7 @@ public interface JPEGDecompressor extends AutoCloseable {
      * @param pixelFormat The pixel format of the decompressed image.
      * @throws JPEGException If an error occurs during decompression.
      */
-    void decompress(byte[] out, int width, int height, PixelFormat pixelFormat) throws JPEGException;
+    void decompress(byte[] out, PixelFormat pixelFormat) throws JPEGException;
 
     /**
      * Decompresses the JPEG data and returns it as a byte array.
