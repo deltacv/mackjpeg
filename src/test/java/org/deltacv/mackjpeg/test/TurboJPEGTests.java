@@ -50,11 +50,21 @@ public class TurboJPEGTests {
             } catch (JPEGException e) {
                 fail("Decompression failed:", e);
             }
+
+            // Test decompression with a specified buffer output
+            try {
+                byte[] output = new byte[decompressor.getDecodedWidth() * decompressor.getDecodedHeight() * 3];
+                decompressor.decompress(output, PixelFormat.RGB);
+
+                assertNotNull(output, "Decompressed output should not be null");
+                assertEquals((TEST_IMAGE_WIDTH * TEST_IMAGE_HEIGHT * 3), output.length, "Decompressed output does not match image size");
+            } catch( JPEGException e) {
+                fail("Decompression with buffer failed:", e);
+            }
         } catch (Exception e) {
             fail("Failed to create JPEG decompressor:", e);
         }
     }
-
 
     @Test
     public void testJpegCompression() {
